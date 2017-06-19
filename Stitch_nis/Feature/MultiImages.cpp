@@ -963,6 +963,8 @@ Mat MultiImages::textureMapping(const vector<vector<Point2> > & _vertices,
     
     vector<Mat> weight_mask, new_weight_mask;
     vector<Point2> origins;
+	vector<Point> corners;
+	vector<Size> sizes;
     vector<Rect_<FLOAT_TYPE> > rects = getVerticesRects<FLOAT_TYPE>(_vertices);
     
     switch (_blend_method) {
@@ -971,6 +973,9 @@ Mat MultiImages::textureMapping(const vector<vector<Point2> > & _vertices,
         case BLEND_LINEAR:
             weight_mask = getMatsLinearBlendWeight(getImages());
             break;
+		case BLEND_MULTIBAND:
+			weight_mask = getMatsLinearBlendWeight(getImages());
+			break;
         default:
             printError("F(textureMapping) BLENDING METHOD");;
     }
@@ -982,6 +987,8 @@ Mat MultiImages::textureMapping(const vector<vector<Point2> > & _vertices,
     _warp_images.reserve(_vertices.size());
     origins.reserve(_vertices.size());
     new_weight_mask.reserve(_vertices.size());
+	sizes.reserve(_vertices.size());
+	corners.reserve(_vertices.size());
     
     const int NO_GRID = -1, TRIANGLE_COUNT = 3, PRECISION = 0;
     const int SCALE = pow(2, PRECISION);
@@ -1041,12 +1048,16 @@ Mat MultiImages::textureMapping(const vector<vector<Point2> > & _vertices,
         }
         _warp_images.emplace_back(image);
         origins.emplace_back(rects[i].x, rects[i].y);
+		corners.emplace_back(rects[i].x, rects[i].y);
+		sizes.emplace_back(rects[i].size());
         if(_blend_method != BLEND_AVERAGE) {
             new_weight_mask.emplace_back(w_mask);
         }
     }
-    
-    return Blending(_warp_images, origins, _target_size, new_weight_mask, _blend_method == BLEND_AVERAGE);
+    if (_blend_method != BLEND_MULTIBAND)
+		return Blending(_warp_images, origins, _target_size, new_weight_mask, _blend_method == BLEND_AVERAGE);
+	else 
+		return Blending(_warp_images, corners, sizes, _target_size, new_weight_mask, _blend_method == BLEND_AVERAGE);
 }
 
 void MultiImages::writeResultWithMesh(const Mat & _result,

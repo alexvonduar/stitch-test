@@ -21,4 +21,11 @@ Mat Blending(const vector<Mat> & images,
              const vector<Mat> & weight_mask,
              const bool ignore_weight_mask = true);
 
+Mat Blending(const vector<Mat> & images,
+	const vector<Point> & corners,
+	const vector<Size> sizes,
+	const Size2 target_size,
+	const vector<Mat> & weight_mask,
+	const bool ignore_weight_mask = true);
+
 #endif /* defined(__UglyMan_Stitiching__Blending__) */

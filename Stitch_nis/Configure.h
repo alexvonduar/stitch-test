@@ -104,10 +104,10 @@ const string GLOBAL_ROTATION_METHODS_NAME[GLOBAL_ROTATION_METHODS_SIZE] = {
 
 /* blending method setting */
 enum BLENDING_METHODS {
-    BLEND_AVERAGE = 0, BLEND_LINEAR, BLEND_METHODS_SIZE
+    BLEND_AVERAGE = 0, BLEND_LINEAR, BLEND_MULTIBAND, BLEND_METHODS_SIZE
 };
 const string BLENDING_METHODS_NAME[BLEND_METHODS_SIZE] = {
-    "[BLEND_AVERAGE]", "[BLEND_LINEAR]"
+    "[BLEND_AVERAGE]", "[BLEND_LINEAR]", "[BLEND_MULTIBAND]"
 };
 
 
@@ -129,5 +129,6 @@ const int expos_comp_type = ExposureCompensator::GAIN_BLOCKS;
 const string seam_find_type = "gc_color";
 const int blend_type = Blender::MULTI_BAND;
 const float blend_strength = 5;
+const bool try_cuda = false;
 
 #endif /* defined(__UglyMan_Stitiching__Configure__) */
